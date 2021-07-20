@@ -9,10 +9,10 @@ import stanza
 depparse_gum_config = {
     'lang': "en",
     'processors': "tokenize,pos,lemma,depparse",
-    'tokenize_model_path': '../model/en/tokenize/combined.pt',
-    'pos_model_path': '../model/en/pos/combined.pt',
-    'depparse_model_path': '../model/en/depparse/combined.pt',
-    'lemma_model_path': '../model/en/lemma/combined.pt',
+    'tokenize_model_path': '../../model/en/tokenize/combined.pt',
+    'pos_model_path': '../../model/en/pos/combined.pt',
+    'depparse_model_path': '../../model/en/depparse/combined.pt',
+    'lemma_model_path': '../../model/en/lemma/combined.pt',
     'tokenize_no_ssplit': True,
     'use_gpu': True,
     'pos_batch_size': 2000
@@ -22,7 +22,7 @@ depparse_gum_config = {
 token_config = {
     'lang': "en",
     'processors': "tokenize",
-    'tokenize_model_path': '../model/en/tokenize/combined.pt',
+    'tokenize_model_path': '../../model/en/tokenize/combined.pt',
     'tokenize_no_ssplit': True,
     'use_gpu': False,
     'pos_batch_size': 3000
