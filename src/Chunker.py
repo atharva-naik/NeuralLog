@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import binarytree as bt
 from nltk.tree import Tree
 from nltk.draw import TreeWidget
