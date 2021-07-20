@@ -1,10 +1,11 @@
 import binarytree as bt
-from wordnet import find_relation, get_word_sets
-from PIL import Image, ImageDraw
 from nltk.tree import Tree
 from nltk.draw import TreeWidget
+from PIL import Image, ImageDraw
 from nltk.draw.util import CanvasFrame
 from IPython.display import Image, display
+from wordnet import find_relation, get_word_sets
+
 
 nounModifiers = {"det", "nummod", "amod", "obl:tmod",
                  "acl:relcl", "nmod", "case", "nmod:pass",  "acl", "Prime","cc"}
@@ -32,6 +33,7 @@ arrows = {
 
 
 def annotation2string(annotation):
+    '''self contained function, no change needed.'''
     annotated = list(annotation['annotated'].popkeys())
 
     def compose_token(word):
@@ -60,6 +62,7 @@ class Unode:
         self.end = -1
         self.nodes = set()
         self.cc = None
+        
     def add_Unode(self, node):
         # print(node.prop)
         if(self.isRoot):
@@ -453,6 +456,7 @@ class Chunker:
         out_results.append(temp)
 
         return out_results
+        
     def make_chunks(self, graph_or_root, results):
         if(type(graph_or_root) is Ugraph):
             root = graph_or_root.root
@@ -500,3 +504,24 @@ class Chunker:
         pipe1 = GraphPipeline()
         g1 = pipe1.mono2Graph(tree)
         return self.make_chunks(g1, [])
+
+
+if __name__ == '__main__':
+    from Udep2Mono.polarization import PolarizationPipeline # include Udep2Mono package.
+
+    sentences = ["There is a girl with a bag", "Here is the homework that I just wrote", "This is the pizza that I just ordered","There is no cat who playing with a device"]
+    pipeline = PolarizationPipeline(verbose = 1)
+    results = []
+    results_tree = []
+    for sent in sentences:
+        tree = pipeline.single_polarization(sent)["polarized_tree"]
+        results_tree.append(tree)
+        results.append(pipeline.postprocess(tree,""))
+    print(results)
+    # visualize_tree(results[2])
+    gp = GraphPipeline()
+    chunker = Chunker()
+    results = []
+    gh1 = gp.mono2Graph(results_tree[3])
+    chunks = chunker.make_chunks(gh1, results)
+    print(chunks)
