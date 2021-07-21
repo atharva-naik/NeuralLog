@@ -514,15 +514,20 @@ if __name__ == '__main__':
     pipeline = PolarizationPipeline(verbose = 1)
     results = []
     results_tree = []
-    for sent in sentences:
-        tree = pipeline.single_polarization(sent)["polarized_tree"]
-        results_tree.append(tree)
-        results.append(pipeline.postprocess(tree,""))
-    print(results)
+    for i,sent in enumerate(sentences):
+        try:
+            tree = pipeline.single_polarization(sent)["polarized_tree"]
+            results_tree.append(tree)
+            results.append(pipeline.postprocess(tree,""))
+        except RuntimeError:
+            print(i,sent)
+    print(len(results))
     # visualize_tree(results[2])
     gp = GraphPipeline()
     chunker = Chunker()
-    results = []
-    gh1 = gp.mono2Graph(results_tree[3])
-    chunks = chunker.make_chunks(gh1, results)
+    res = []
+    gh1 = gp.mono2Graph(results_tree[2])
+    print(sentences[3])
+    print(results[2])
+    chunks = chunker.make_chunks(gh1, res)
     print(chunks)
