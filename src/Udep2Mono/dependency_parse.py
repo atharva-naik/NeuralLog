@@ -33,7 +33,7 @@ depparse_gum_config = {
 token_config = {
     'lang': "en",
     'processors': "tokenize",
-    'tokenize_model_path': '../model/en/tokenize/gum.pt',
+    'tokenize_model_path': '../../model/en/tokenize/gum.pt',
     'tokenize_no_ssplit': True,
     'use_gpu': False,
     'pos_batch_size': 3000
