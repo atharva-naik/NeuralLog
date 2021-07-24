@@ -506,12 +506,56 @@ class Chunker:
         g1 = pipe1.mono2Graph(tree)
         return self.make_chunks(g1, [])
 
+def filtera_bad_chunks():
+    pass
+
+def read_jsonl(path):
+    import json
+
+    data = []
+    lines = open(path).read().splitlines()
+    for line in lines:
+        data.append(json.loads(line))
+
+    return data
+
+def chunk_sentences(sentences):
+    from Udep2Mono.polarization import PolarizationPipeline # include Udep2Mono package.
+
+    pipeline = PolarizationPipeline(verbose=1)
+    results, results_tree = [], []
+    for i,sent in enumerate(sentences):
+        try:
+            tree = pipeline.single_polarization(sent)["polarized_tree"]
+            results_tree.append(tree)
+            results.append(pipeline.postprocess(tree,""))
+        except RuntimeError:
+            print(i, sent, "StopIteration was raised. Skipping for now.")
+            results_tree.append(None)
+    gp = GraphPipeline()
+    chunker = Chunker()
+    chunks = []
+    for i in range(len(sentences)):
+        res = []
+        if results_tree[i]:
+            gh1 = gp.mono2Graph(results_tree[i])
+            chunks.append(chunker.make_chunks(gh1, res))
+        else: chunks.append([])
+
+    return chunks    
+
 
 if __name__ == '__main__':
+    import sys
+    
+    sentences = read_jsonl(sys.argv[1]) # get jsonl file as input.
+    sentences[0]
+    # chunk_sentences()
+    '''
     from Udep2Mono.polarization import PolarizationPipeline # include Udep2Mono package.
 
     sentences = ["There is a girl with a bag", "Here is the homework that I just wrote", "This is the pizza that I just ordered","There is no cat who playing with a device"]
-    pipeline = PolarizationPipeline(verbose = 1)
+    pipeline = PolarizationPipeline(verbose=1)
     results = []
     results_tree = []
     for i,sent in enumerate(sentences):
@@ -531,3 +575,4 @@ if __name__ == '__main__':
     print(results[2])
     chunks = chunker.make_chunks(gh1, res)
     print(chunks)
+    '''
