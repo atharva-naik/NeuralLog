@@ -214,28 +214,34 @@ def stanza_parse(sentence, parser="gum"):
 def enhance_parse(tree, heads, deps, words):
     for node in tree:
         if node[0] == "conj":
-            if "nsubj" in heads[node[1]] and "nsubj" in heads[node[2]]:
-                node[0] = "conj-sent"
-            elif words[node[1]][1] == "JJ" and words[node[2]][1] == "JJ":
-                node[0] = "conj-adj"
-            elif "NN" in words[node[1]][1] and "NN" in words[node[2]][1]:
-                node[0] = "conj-n"
-                vp_rel = set(["amod", "compound", "compound",  "compound:prt", "det",
-                              "nummod", "appos", "advmod", "nmod", "nmod:poss"])
-                vp_left = set(heads[node[1]]) & vp_rel
-                vp_right = set(heads[node[2]]) & vp_rel
-                if len(vp_left) and len(vp_right):
-                    node[0] = "conj-np"
-            elif "VB" in words[node[1]][1] and "VB" in words[node[2]][1]:
-                node[0] = "conj-vb"
-                vp_rel = set(["obj", "xcomp", "obl"])
-                vp_left = set(heads[node[1]]) & vp_rel
-                vp_right = set(heads[node[2]]) & vp_rel
+            try:
+                if "nsubj" in heads[node[1]] and "nsubj" in heads[node[2]]:
+                    node[0] = "conj-sent"
+                elif words[node[1]][1] == "JJ" and words[node[2]][1] == "JJ":
+                    node[0] = "conj-adj"
+                elif "NN" in words[node[1]][1] and "NN" in words[node[2]][1]:
+                    node[0] = "conj-n"
+                    vp_rel = set(["amod", "compound", "compound",  "compound:prt", "det",
+                                "nummod", "appos", "advmod", "nmod", "nmod:poss"])
+                    vp_left = set(heads[node[1]]) & vp_rel
+                    vp_right = set(heads[node[2]]) & vp_rel
+                    if len(vp_left) and len(vp_right):
+                        node[0] = "conj-np"
+                elif "VB" in words[node[1]][1] and "VB" in words[node[2]][1]:
+                    node[0] = "conj-vb"
+                    vp_rel = set(["obj", "xcomp", "obl"])
+                    vp_left = set(heads[node[1]]) & vp_rel
+                    vp_right = set(heads[node[2]]) & vp_rel
 
-                if len(vp_left):
-                    if len(vp_right):
-                        node[0] = "conj-vp"
-                    # else:
+                    if len(vp_left):
+                        if len(vp_right):
+                            node[0] = "conj-vp"
+                        # else:
+            except KeyError:
+                print("node[0]", node[0])
+                print("node[1]:", node[1])
+                print("heads:", heads)
+                exit("terminated on KeyError")
 
         if node[0] == "advcl":
             if words[1][0] == "if":
